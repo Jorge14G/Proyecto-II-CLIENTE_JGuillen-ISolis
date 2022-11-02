@@ -17,6 +17,8 @@ import javax.swing.plaf.FileChooserUI;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -25,11 +27,16 @@ public class Cliente {
     private JFrame frame;
 
     static JTextField entradaCliente = new JTextField();
+    static JTextField entradaCliente_1 = new JTextField();
     static JTextArea chat = new JTextArea();
     static ServerSocket ss;
     static Socket s;
     static DataInputStream din;
     static DataOutputStream dout;
+    static JRadioButton r1= new JRadioButton("Word/Phrase");
+    static JRadioButton r2= new JRadioButton();
+    static JRadioButton r3= new JRadioButton();
+    static JRadioButton r4= new JRadioButton();
     //static ObjectOutputStream documents;
 
     public static void main(String[] args) {
@@ -63,17 +70,15 @@ public class Cliente {
     }
     private void initialize() {
         frame = new JFrame();
-        frame.setBounds(100, 100, 500, 500);
+        frame.setBounds(100, 100, 750, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
-        chat.setBounds(44, 47, 330, 189);
+        chat.setBounds(45, 45, 330, 300);
         frame.getContentPane().add(chat);
 
 
         JButton selectDocument = new JButton("Browse");
-
-
 
         selectDocument.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -86,12 +91,10 @@ public class Cliente {
                 if (selectCarpeta.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
                     File carpeta = selectCarpeta.getSelectedFile(); //getCurrentDirectory();
                     if(carpeta.isDirectory()) {
-                        System.out.println("es direc");
                     }else {
-                        System.out.println("jiji");
                         String msgout = carpeta.toString();
                         try {
-                            dout.writeUTF(msgout);
+                            dout.writeUTF("2"+msgout);
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }
@@ -100,28 +103,47 @@ public class Cliente {
                 }
             }
         });
-        selectDocument.setBounds(350, 350, 139, 43);
+        selectDocument.setBounds(400, 135, 140, 40);
         frame.getContentPane().add(selectDocument);
 
-        JButton enviar = new JButton("New button");
+        JButton enviar = new JButton("Search/Word");
         enviar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
                     String msgout = "";
                     msgout = entradaCliente.getText().trim();
-                    dout.writeUTF(msgout);
+
+                    dout.writeUTF("1"+msgout);
                 } catch (Exception e2) {
                 }
             }
         });
-        enviar.setBounds(322, 281, 139, 43);
+        JButton enviar_2 = new JButton("Search/Phrase");
+        enviar_2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String msgout = "";
+                    System.out.print(entradaCliente_1.getText());
+                    msgout = entradaCliente_1.getText().trim();
+                    dout.writeUTF("0"+msgout);
+                } catch (Exception e2) {
+                }
+            }
+        });
+        enviar.setBounds(400, 45, 140, 40);
         frame.getContentPane().add(enviar);
 
+        enviar_2.setBounds(400, 90, 140, 40);
+        frame.getContentPane().add(enviar_2);
+
+
         JLabel Cliente  = new JLabel("Cliente");
-        Cliente.setBounds(433, 52, 49, 14);
+        Cliente.setBounds(45, 20, 50, 15);
         frame.getContentPane().add(Cliente);
 
-        entradaCliente.setBounds(200, 300, 100, 30);
+        entradaCliente.setBounds(570, 45, 150, 40);
         frame.getContentPane().add(entradaCliente);
+        entradaCliente_1.setBounds(570, 90, 150, 40);
+        frame.getContentPane().add(entradaCliente_1);
     }
 }
